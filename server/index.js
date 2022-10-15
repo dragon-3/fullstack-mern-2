@@ -10,9 +10,11 @@ app.use(express.json());
 app.use(cors());
 
 //Allow all cors "access-origin"
-// app.options('*', cors());
+app.options('*', cors());
 
-mongoose.connect('mongodb+srv://seannarron9:dragon928@crud.4fkaje4.mongodb.net/user?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://seannarron9:dragon928@crud.4fkaje4.mongodb.net/user?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+})
 
 
 //API
@@ -25,7 +27,19 @@ app.get("/users", (req, res) => {
     })
 })
 
-app.post('insert', (req, res) => {
+app.get('/users/:id', (req, res) => {
+
+    const id = req.params.id
+
+    UserModel.find({_id: id}, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+        res.send(result)
+    })
+})
+
+app.post('/insert', (req, res) => {
     
     const userName = req.body.userName;
     const userOrientation = req.body.userOrientation;
@@ -41,8 +55,33 @@ app.post('insert', (req, res) => {
     } catch (err) {
         console.log(err)
     }
-    
+})
 
+app.put('/update', (req, res) => {
+    const id = req.body.id;
+    const userName = req.body.userName;
+    const userOrientation = req.body.userOrientation;
+    try {
+        UserModel.findById(id, (err, updatedData) => {
+            updatedData.userName = userName;
+            updatedData.userOrientation = userOrientation;
+            updatedData.save();
+            res.send("Updated!")
+
+        })
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+app.delete('/delete/:id', (req, res) => {
+    const id = req.params.id
+    try {
+        UserModel.findByIdAndRemove(id).exec();
+        res.send("Deleted!")
+    } catch (err) {
+        console.log(err)
+    }
 })
 
 

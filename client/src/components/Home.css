@@ -1,0 +1,15 @@
+table {
+    margin: 0 auto;
+    width: 60%;
+}
+
+table, th, tr, td {
+    border: solid grey;
+    border-collapse: collapse;
+    border-width: thin;
+    padding: 18px;
+}
+
+.add {
+    margin-top: 50px;
+}
